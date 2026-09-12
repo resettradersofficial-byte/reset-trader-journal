@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RESET TRADER — Daily Journal</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#171717">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RESET TRADER">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<style>
+
+:root{--bg:#f5f3ee;--paper:#fffefa;--ink:#171717;--muted:#706b62;--line:#ddd8ce;--gold:#b7891d;--red:#b44741;--green:#2d7b59;--blue:#4268a8;--purple:#7251b4}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 Inter,system-ui,sans-serif}
+nav{position:sticky;top:0;z-index:20;padding:12px 4vw;background:rgba(245,243,238,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);display:flex;gap:18px;align-items:center}nav b{font:800 15px Syne;margin-right:auto;letter-spacing:.05em}nav a{font-size:11px;font-weight:800;color:var(--muted);white-space:nowrap}
+main{max-width:1200px;margin:auto;padding:34px 5vw 80px}.top{display:flex;justify-content:space-between;gap:20px;align-items:flex-end;margin-bottom:28px}.eyebrow{font-size:10px;letter-spacing:.18em;font-weight:800;color:var(--gold);text-transform:uppercase}.top h1{font:800 clamp(2.5rem,6vw,5.5rem)/.9 Syne;letter-spacing:-.05em;margin:8px 0}.top p{color:var(--muted);max-width:650px;margin:0}
+.toolbar{display:flex;gap:9px;flex-wrap:wrap}.btn{border:1px solid var(--line);background:var(--paper);padding:10px 14px;border-radius:11px;font:700 12px Inter;cursor:pointer}.btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}.btn.danger{color:var(--red)}
+.tabs{display:flex;gap:5px;overflow:auto;margin-bottom:20px}.tab{border:0;background:transparent;padding:10px 13px;border-radius:9px;font-weight:800;color:var(--muted);cursor:pointer}.tab.active{background:var(--ink);color:white}
+.panel{display:none}.panel.active{display:block}.section{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:26px;margin-bottom:18px;box-shadow:0 8px 25px rgba(30,25,18,.045)}.section h2{font:800 28px/.98 Syne;letter-spacing:-.035em;margin:0 0 8px}.section .hint{color:var(--muted);margin:0 0 20px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.grid.two{grid-template-columns:repeat(2,1fr)}label{display:block;font-size:10px;font-weight:800;letter-spacing:.12em;color:#918b82;text-transform:uppercase;margin-bottom:7px}.guide{color:var(--muted);font-size:11px;line-height:1.5;margin:-2px 0 8px}.guide strong{color:#5f5a52}.field-block{min-width:0}
+input,select,textarea{width:100%;border:1px solid var(--line);background:#fff;border-radius:10px;padding:11px 12px;font:14px Inter;color:var(--ink);outline:none}textarea{min-height:105px;resize:vertical}input:focus,select:focus,textarea:focus{border-color:#aaa295}
+.choice-row{display:flex;flex-wrap:wrap;gap:7px}.choice{border:1px solid var(--line);background:#fff;padding:9px 12px;border-radius:9px;font-weight:700;font-size:12px;cursor:pointer}.choice.selected{background:#171717;color:#fff;border-color:#171717}
+.scale{display:flex;gap:6px}.scale button{flex:1;border:1px solid var(--line);background:#fff;border-radius:8px;padding:10px 4px;cursor:pointer;font-weight:800}.scale button.selected{background:var(--gold);color:#fff;border-color:var(--gold)}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric{background:#f2efe8;border-radius:14px;padding:17px}.metric small{color:#918b82;font-weight:800;font-size:9px;letter-spacing:.12em}.metric strong{display:block;font:800 27px Syne;margin-top:6px}
+.trade{border:1px solid var(--line);border-radius:16px;padding:17px;margin-top:12px;background:#fff}.trade-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.trade-head b{font:800 18px Syne}.remove{border:0;background:none;color:var(--red);cursor:pointer;font-weight:800}.trade-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-top:12px}.mini label{font-size:8px}.mini input,.mini select{padding:9px;font-size:12px}.trigger-box{margin-top:12px;padding:13px;background:#f3eee5;border-radius:11px}.hidden{display:none!important}
+.protocol{background:#171717;color:#fff;border-radius:20px;padding:25px;margin-top:18px}.protocol h2{font:800 31px Syne;letter-spacing:-.04em;margin:0 0 8px}.protocol p{color:#d0ccc4}.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:18px}.steps div{border:1px solid #3b3b3b;border-radius:11px;padding:15px}.steps small{color:#c9a94f;font-weight:800}.steps b{display:block;margin-top:5px}
+.history-item{display:grid;grid-template-columns:130px 1fr auto;gap:15px;padding:17px 0;border-bottom:1px solid var(--line);align-items:center}.history-item:last-child{border-bottom:0}.history-date{font-weight:800}.history-item p{margin:0;color:var(--muted)}.badge{padding:5px 8px;border-radius:7px;background:#eee9df;font-size:10px;font-weight:800}.submit-bar{display:flex;justify-content:flex-end;margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}.submit-bar .btn{min-width:190px}.status{font-size:11px;color:var(--muted);margin:-8px 0 18px 3px;min-height:17px}
+footer{text-align:center;color:#928c83;padding:20px}
+@media(max-width:850px){.grid,.grid.two,.cards{grid-template-columns:1fr 1fr}.trade-grid{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:1fr 1fr}.top{display:block}.toolbar{margin-top:18px}}
+@media(max-width:520px){main{padding:24px 15px 60px}.grid,.grid.two,.cards,.trade-grid,.steps{grid-template-columns:1fr}.section{padding:20px}.history-item{grid-template-columns:1fr}.top h1{font-size:3rem}}
+
+.auth-gate{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px;overflow:auto}.auth-card{width:min(430px,100%);background:var(--paper);border:1px solid var(--line);border-radius:24px;padding:30px;box-shadow:0 20px 60px rgba(30,25,18,.10)}.auth-mark{width:58px;height:58px;border-radius:16px;display:block;margin-bottom:22px}.auth-card h1{font:800 38px/.95 Syne;letter-spacing:-.05em;margin:0 0 10px}.auth-card .auth-sub{color:var(--muted);margin:0 0 24px}.auth-tabs{display:flex;gap:5px;background:#eee9df;padding:4px;border-radius:11px;margin-bottom:18px}.auth-tab{flex:1;border:0;background:transparent;padding:10px;border-radius:8px;font-weight:800;cursor:pointer}.auth-tab.active{background:#171717;color:#fff}.auth-form{display:grid;gap:10px}.auth-form .btn{width:100%;min-height:44px}.auth-divider{display:flex;align-items:center;gap:10px;color:#999;font-size:11px;margin:14px 0}.auth-divider:before,.auth-divider:after{content:'';height:1px;background:var(--line);flex:1}.auth-error{background:#fff0ee;color:var(--red);border:1px solid #efcbc6;padding:10px 12px;border-radius:10px;font-size:12px;display:none}.auth-note{font-size:11px;color:var(--muted);margin-top:16px;line-height:1.5}.user-chip{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--paper);font-size:11px;font-weight:800}.user-avatar{width:24px;height:24px;border-radius:50%;object-fit:cover;background:#ddd}.account-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.sync-dot{display:inline-flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);font-weight:800}.sync-dot:before{content:'';width:7px;height:7px;border-radius:50%;background:#2d7b59}.sync-dot.offline:before{background:#b7891d}.locked{display:none!important}
+</style>
+</head>
+<body>
+<div id="authGate" class="auth-gate">
+  <div class="auth-card">
+    <img class="auth-mark" src="icons/icon-192.png" alt="RESET TRADER">
+    <div class="eyebrow">Behavioral Trading Journal</div>
+    <h1>RESET<br>TRADER.</h1>
+    <p class="auth-sub">Trade. Observe. Reset.</p>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="signInTab" type="button">Sign in</button>
+      <button class="auth-tab" id="signUpTab" type="button">Create account</button>
+    </div>
+    <button class="btn primary" id="googleBtn" type="button">Continue with Google</button>
+    <div class="auth-divider">or use email</div>
+    <form class="auth-form" id="emailForm">
+      <input id="authEmail" type="email" autocomplete="email" placeholder="Email address" required>
+      <input id="authPassword" type="password" autocomplete="current-password" placeholder="Password · 6+ characters" minlength="6" required>
+      <button class="btn" id="emailBtn" type="submit">Sign in with email</button>
+    </form>
+    <button class="btn" id="forgotBtn" type="button" style="margin-top:8px">Forgot password?</button>
+    <div id="authError" class="auth-error" style="margin-top:12px"></div>
+    <p class="auth-note">Your journal is linked to your account. Submitted sessions can sync across your devices. Offline work remains available after the app has been used online.</p>
+  </div>
+</div>
+
+<nav><b>RESET TRADER</b><a href="#journal">TODAY</a><a href="#history">HISTORY</a><a href="#stats">PATTERNS</a></nav>
+
+<main>
+<div class="top">
+<div><div class="eyebrow">Daily Behavioral Trading Journal</div><h1>TRADE.<br>OBSERVE.<br>RESET.</h1><p>Built to train the gap between trigger and action. P&L is recorded, but behavior is the primary metric.</p></div>
+<div class="toolbar"><button class="btn primary" onclick="newSession()">NEW SESSION</button><button class="btn" onclick="exportData()">EXPORT</button><button class="btn" onclick="importData()">IMPORT</button><button class="btn" id="installBtn" style="display:none" onclick="installApp()">INSTALL APP</button><div class="account-bar"><span class="sync-dot" id="syncDot">SYNCING</span><span class="user-chip"><img class="user-avatar" id="userAvatar" src="icons/icon-192.png" alt=""><span id="userLabel">ACCOUNT</span></span><button class="btn" id="signOutBtn" type="button">SIGN OUT</button></div></div>
+</div>
+
+<div class="tabs">
+<button class="tab active" onclick="showTab('today',this)">Today</button>
+<button class="tab" onclick="showTab('trades',this)">Trades</button>
+<button class="tab" onclick="showTab('history',this)">History</button>
+<button class="tab" onclick="showTab('stats',this)">Patterns</button>
+</div>
+<div id="appStatus" class="status">Offline-ready · Your journal stays on this device.</div>
+
+<div id="today" class="panel active">
+<section class="section" id="journal"><h2>01 / BEFORE MARKET</h2><p class="hint">Don't enter the market before you enter yourself.</p>
+<div class="grid">
+<div><label>Date</label><input id="date" type="date"></div>
+<div><label>Market / Session</label><input id="session" placeholder="XAUUSD · London / NY"></div>
+<div><label>Planned risk</label><input id="risk" placeholder="e.g. 0.5%"></div>
+</div>
+<div style="margin-top:18px"><label>Current state</label><p class="guide"><strong>What are you bringing into the market right now?</strong> Choose what is present, not what you think you should feel.</p><div class="choice-row" data-field="state"><button class="choice">Calm</button><button class="choice">Focused</button><button class="choice">Excited</button><button class="choice">Restless</button><button class="choice">Frustrated</button><button class="choice">Tired</button><button class="choice">Pressured</button></div></div>
+<div class="grid two" style="margin-top:18px">
+<div class="field-block"><label>What do I want from today?</label><p class="guide"><strong>Look underneath the obvious answer.</strong> Am I here to execute, recover, prove myself, validate my ability, avoid another loss, make money, or get a particular outcome?</p><textarea id="motive" placeholder="Be specific about the outcome or internal payoff you may be seeking."></textarea></div>
+<div class="field-block"><label>What would a loss mean to me today?</label><p class="guide"><strong>Don't just name the emotion.</strong> What would the loss make me believe about myself, my trading, or my progress? What might I feel I need to do next?</p><textarea id="lossMeaning" placeholder="Example: “It would mean I’m behind, and I’d want to make it back today.”"></textarea></div>
+</div>
+</section>
+
+<section class="section"><h2>02 / READINESS</h2><p class="hint">Rate the state, not your confidence.</p>
+<div class="grid">
+<div><label>Emotional charge · 1–5</label><p class="guide">How activated are you? <strong>1 = neutral, 5 = highly charged.</strong></p><div class="scale" data-field="charge"></div></div>
+<div><label>Urgency to trade · 1–5</label><p class="guide">How strongly do you feel you <strong>need to act</strong> rather than wait?</p><div class="scale" data-field="urgency"></div></div>
+<div><label>Need to make money · 1–5</label><p class="guide">How much is today's P&amp;L tied to your <strong>emotional state or sense of progress</strong>?</p><div class="scale" data-field="moneyNeed"></div></div>
+</div>
+<div style="margin-top:18px"><label>Pre-market contract</label><p class="guide">Read this as a commitment to <strong>action, sizing and process</strong>, not a promise about the result.</p><textarea id="contract">I am responsible for my action, sizing and process. I am not entitled to a particular outcome.</textarea></div>
+</section>
+<div class="submit-bar"><button class="btn primary" onclick="saveDraft('Today saved', 'trades')">SAVE TODAY &amp; CONTINUE</button></div>
+</div>
+
+<div id="trades" class="panel">
+<section class="section"><h2>03 / TRADE LOG</h2><p class="hint">Live entries should take seconds. Deep reflection happens after. Record the decision process separately from the result.</p>
+<div id="tradeList"></div><button class="btn primary" onclick="addTrade()">+ ADD TRADE</button>
+</section>
+<section class="protocol"><h2>THE 60-SECOND RESET</h2><p>Use after a loss, missed entry, big win, comment, rule violation, sudden urge, or any moment where the next trade feels emotionally necessary.</p>
+<div class="steps"><div><small>01</small><b>NOTICE</b>Locate the body signal before interpreting it.</div><div><small>02</small><b>BREATHE</b>4 in · 4 hold · 4 out · 4 hold × 4.</div><div><small>03</small><b>NAME</b>Identify the precise emotion.</div><div><small>04</small><b>CHECK</b>Am I executing, or trying to change how I feel?</div><div><small>05</small><b>CHOOSE</b>Take the trade only if the setup and rules still qualify.</div></div></section>
+<div class="submit-bar"><button class="btn primary" onclick="saveDraft('Trades saved', 'history')">SAVE TRADES &amp; CONTINUE</button></div>
+</div>
+
+<div id="history" class="panel">
+<section class="section"><h2>04 / SESSION REVIEW</h2><p class="hint">Review the behavior, not just the P&L.</p>
+<div class="grid two">
+<div class="field-block"><label>What pattern appeared today?</label><p class="guide">Look for a repeatable sequence: <strong>trigger → body → emotion → ego → thought → action.</strong></p><textarea id="pattern" placeholder="Example: loss → chest tightness → urgency → Rusher → “make it back” → premature entry."></textarea></div>
+<div class="field-block"><label>Where did I widen or lose the gap?</label><p class="guide">Identify the exact moment you had a chance to pause and choose, or the moment the reaction became the decision.</p><textarea id="gap" placeholder="What happened between the trigger and the action?"></textarea></div>
+<div class="field-block"><label>What did I do well?</label><p class="guide">Record <strong>process wins</strong>, even when the trade lost.</p><textarea id="win" placeholder="Examples: waited, kept size, skipped a weak setup, reset after a loss..."></textarea></div>
+<div class="field-block"><label>One concrete rule for tomorrow</label><p class="guide">Choose one behavior you can observe tomorrow. <strong>Make it specific enough to know whether you followed it.</strong></p><textarea id="tomorrow" placeholder="Example: After any loss, no new trade until I complete the 60-second reset."></textarea></div>
+</div>
+</section>
+<section class="section"><h2>PAST SESSIONS</h2><div id="historyList"></div></section>
+<div class="submit-bar"><button class="btn primary" onclick="submitSession()">SUBMIT SESSION</button></div>
+</div>
+
+<div id="stats" class="panel">
+<section class="section"><h2>05 / BEHAVIORAL PATTERNS</h2><p class="hint">This page learns from your own journal. It does not judge profitability.</p>
+<div class="cards">
+<div class="metric"><small>SESSIONS</small><strong id="statSessions">0</strong></div>
+<div class="metric"><small>TRADES</small><strong id="statTrades">0</strong></div>
+<div class="metric"><small>RULE BREAKS</small><strong id="statBreaks">0</strong></div>
+<div class="metric"><small>TRIGGERED TRADES</small><strong id="statTriggers">0</strong></div>
+</div>
+<div class="grid two" style="margin-top:18px">
+<div class="card" style="border:1px solid var(--line);padding:18px;border-radius:14px"><label>Most common trigger</label><h3 id="commonTrigger">—</h3></div>
+<div class="card" style="border:1px solid var(--line);padding:18px;border-radius:14px"><label>Most common ego pattern</label><h3 id="commonEgo">—</h3></div>
+</div>
+</section>
+</div>
+</main>
+<footer>Your goal is not to eliminate emotion. It is to become difficult to hijack.</footer>
+
+<script>
+const KEY='resetTraderJournalV1';
+let db=JSON.parse(localStorage.getItem(KEY)||'{"sessions":[]}');
+db.sessions=Array.isArray(db.sessions)?db.sessions:[];
+db.sessions=db.sessions.map((s,i)=>({...s,id:s.id||`legacy_${s.date||'unknown'}_${i}_${Date.now()}`}));
+let current={trades:[],state:[],charge:null,urgency:null,moneyNeed:null};
+let editingId=null;
+const ids=['date','session','risk','motive','lossMeaning','contract','pattern','gap','win','tomorrow'];
+function val(id){return document.getElementById(id)?.value||''}
+function setVal(id,v){let e=document.getElementById(id);if(e)e.value=v||''}
+function today(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function setStatus(msg){const e=document.getElementById('appStatus');if(e)e.textContent=msg}
+function persist(){localStorage.setItem(KEY,JSON.stringify(db))}
+
+document.getElementById('date').value=today();
+
+document.querySelectorAll('.choice-row').forEach(row=>row.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{row.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');current.state=[...row.querySelectorAll('.selected')].map(x=>x.textContent);saveDraft('Draft saved')}));
+document.querySelectorAll('.scale').forEach(row=>{for(let i=1;i<=5;i++){let b=document.createElement('button');b.type='button';b.textContent=i;b.onclick=()=>{row.querySelectorAll('button').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');current[row.dataset.field]=i;saveDraft('Draft saved')};row.appendChild(b)}});
+
+function showTab(id,btn){document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');if(id==='history')renderHistory();if(id==='stats')renderStats();}
+
+function addTrade(t={}){
+ let i=current.trades.length;
+ let trade={result:'',valid:'YES',rules:'YES',market:'',size:'',trigger:'NO',body:'',emotion:'',ego:'Rusher',thought:'',...t};
+ current.trades.push(trade);
+ let el=document.createElement('div');el.className='trade';el.dataset.i=i;
+ el.innerHTML=`<div class="trade-head"><b>Trade #${i+1}</b><button class="remove" type="button" onclick="removeTrade(${i})">REMOVE</button></div>
+ <div class="trade-grid">
+ <div class="mini"><label>Result</label><input data-k="result" placeholder="+ / - R"></div>
+ <div class="mini"><label>Setup valid?</label><select data-k="valid"><option>YES</option><option>NO</option></select></div>
+ <div class="mini"><label>Rules followed?</label><select data-k="rules"><option>YES</option><option>NO</option></select></div>
+ <div class="mini"><label>Session</label><input data-k="market" placeholder="London / NY"></div>
+ <div class="mini"><label>Size</label><input data-k="size" placeholder="0.5R"></div></div>
+ <div class="trigger-box"><label>Was there an internal trigger?</label><p class="guide">Did something change internally before or during this trade? <strong>Urge, pressure, fear, anger, excitement, need to recover, need to prove, etc.</strong></p><select data-k="trigger" onchange="toggleTrigger(this,${i});saveDraft('Draft saved')"><option>NO</option><option>YES</option></select>
+ <div id="detail-${i}" class="hidden" style="margin-top:10px"><div class="grid">
+ <div><label>Body</label><p class="guide">What changed physically?</p><input data-k="body" placeholder="Chest, jaw, heat, stomach, shoulders..."></div>
+ <div><label>Emotion</label><p class="guide">Name it precisely, beyond “tilted.”</p><input data-k="emotion" placeholder="Fear, anger, shame, urgency, disappointment..."></div>
+ <div><label>Ego</label><p class="guide">Who is trying to act?</p><select data-k="ego"><option>Rusher</option><option>Performer</option><option>Competitor</option><option>Intellectualizer</option><option>None / unsure</option></select></div>
+ </div><div style="margin-top:10px"><label>Thought</label><p class="guide">What story appeared in your mind?</p><input data-k="thought" placeholder="I need it back. I can’t miss this. I have to prove I’m right..."></div></div></div>`;
+ document.getElementById('tradeList').appendChild(el);
+ el.querySelectorAll('[data-k]').forEach(x=>{if(trade[x.dataset.k]!==undefined)x.value=trade[x.dataset.k];x.addEventListener('input',()=>saveDraft('Draft saved'));x.addEventListener('change',()=>saveDraft('Draft saved'));});
+ toggleTrigger(el.querySelector('[data-k="trigger"]'),i);
+}
+function toggleTrigger(s,i){const d=document.getElementById('detail-'+i);if(d)d.classList.toggle('hidden',s.value!=='YES')}
+function removeTrade(i){current.trades.splice(i,1);document.getElementById('tradeList').innerHTML='';let old=current.trades;current.trades=[];old.forEach(addTrade);saveDraft('Draft saved')}
+function collectTrades(){return [...document.querySelectorAll('.trade')].map(el=>{let o={};el.querySelectorAll('[data-k]').forEach(x=>o[x.dataset.k]=x.value);return o})}
+function buildSession(){return {id:editingId||`session_${Date.now()}_${Math.random().toString(36).slice(2,8)}`,date:val('date')||today(),session:val('session'),risk:val('risk'),state:current.state,motive:val('motive'),lossMeaning:val('lossMeaning'),contract:val('contract'),charge:current.charge,urgency:current.urgency,moneyNeed:current.moneyNeed,trades:collectTrades(),pattern:val('pattern'),gap:val('gap'),win:val('win'),tomorrow:val('tomorrow'),savedAt:new Date().toISOString()}}
+function saveDraft(message='Draft saved', nextTab=null){
+ db.draft=buildSession();
+ persist();
+ setStatus(editingId?'Changes saved to draft · submit to update this session.':message);
+ if(nextTab){
+   const btn=document.querySelector(`.tab[onclick="showTab('${nextTab}',this)"]`);
+   showTab(nextTab,btn||document.querySelector('.tab'));
+   window.scrollTo({top:0,behavior:'smooth'});
+ }
+}
+function submitSession(){
+ const s=buildSession();
+ const idx=db.sessions.findIndex(x=>x.id===editingId);
+ if(idx>=0)db.sessions[idx]=s;else db.sessions.push(s);
+ delete db.draft;editingId=null;persist();renderHistory();renderStats();
+ setStatus('Session submitted and saved locally.');
+ alert('Session submitted.');
+ resetForm(false);
+ showTab('today',document.querySelector('.tab'));
+}
+function resetForm(clearDraft=true){
+ if(clearDraft){delete db.draft;persist();}
+ editingId=null;ids.forEach(k=>setVal(k,k==='contract'?'I am responsible for my action, sizing and process. I am not entitled to a particular outcome.':''));
+ setVal('date',today());current={trades:[],state:[],charge:null,urgency:null,moneyNeed:null};
+ document.querySelectorAll('.choice').forEach(b=>b.classList.remove('selected'));document.querySelectorAll('.scale button').forEach(b=>b.classList.remove('selected'));
+ document.getElementById('tradeList').innerHTML='';addTrade();setStatus('New session ready.');
+}
+function newSession(){if(collectTrades().some(t=>Object.values(t).some(v=>v&&v!=='NO'&&v!=='YES'))||val('motive')||val('pattern')){if(!confirm('Start a new session? Your current draft will be cleared.'))return}resetForm(true)}
+function loadSession(s){
+ editingId=s.id;
+ ['date','session','risk','motive','lossMeaning','contract','pattern','gap','win','tomorrow'].forEach(k=>setVal(k,s[k]));
+ current={...current,state:s.state||[],charge:s.charge??null,urgency:s.urgency??null,moneyNeed:s.moneyNeed??null,trades:[]};
+ document.querySelectorAll('.choice-row .choice').forEach(b=>b.classList.toggle('selected',current.state.includes(b.textContent)));
+ document.querySelectorAll('.scale').forEach(r=>r.querySelectorAll('button').forEach(b=>b.classList.toggle('selected',Number(b.textContent)===current[r.dataset.field])));
+ document.getElementById('tradeList').innerHTML='';(s.trades||[]).forEach(addTrade);setStatus('Past session opened · edit and submit to update.');
+ showTab('today',document.querySelector('.tab'));
+}
+function loadDraft(){
+ if(!db.draft){addTrade();return}
+ const s=db.draft;editingId=s.id&&db.sessions.some(x=>x.id===s.id)?s.id:null;
+ ['date','session','risk','motive','lossMeaning','contract','pattern','gap','win','tomorrow'].forEach(k=>setVal(k,s[k]));
+ current={...current,state:s.state||[],charge:s.charge??null,urgency:s.urgency??null,moneyNeed:s.moneyNeed??null,trades:[]};
+ document.querySelectorAll('.choice-row .choice').forEach(b=>b.classList.toggle('selected',current.state.includes(b.textContent)));
+ document.querySelectorAll('.scale').forEach(r=>r.querySelectorAll('button').forEach(b=>b.classList.toggle('selected',Number(b.textContent)===current[r.dataset.field])));
+ document.getElementById('tradeList').innerHTML='';(s.trades||[]).forEach(addTrade);setStatus(editingId?'Draft loaded · this will update the opened session when submitted.':'Draft restored · continue your session.');
+}
+function renderHistory(){let e=document.getElementById('historyList');if(!db.sessions.length){e.innerHTML='<p style="color:var(--muted)">No submitted sessions yet.</p>';return}e.innerHTML=db.sessions.slice().sort((a,b)=>new Date(b.savedAt||0)-new Date(a.savedAt||0)).map(s=>{const when=s.savedAt?new Date(s.savedAt).toLocaleString([], {dateStyle:'medium',timeStyle:'short'}):'Saved previously';return `<div class="history-item"><div class="history-date">${s.date}</div><p><strong>${escapeHtml(s.session||'Trading session')}</strong> · ${when} · ${(s.trades||[]).length} trades${s.tomorrow?' · '+escapeHtml(s.tomorrow):''}</p><button class="btn" type="button" onclick='loadSession(${JSON.stringify(s).replace(/'/g,"&#39;")})'>OPEN</button></div>`}).join('')}
+function escapeHtml(v){return String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function mode(arr){let a=arr.filter(Boolean);if(!a.length)return'—';return Object.entries(a.reduce((x,v)=>(x[v]=(x[v]||0)+1,x),{})).sort((a,b)=>b[1]-a[1])[0][0]}
+function renderStats(){let ss=db.sessions,ts=ss.flatMap(s=>s.trades||[]);document.getElementById('statSessions').textContent=ss.length;document.getElementById('statTrades').textContent=ts.length;document.getElementById('statBreaks').textContent=ts.filter(t=>t.rules==='NO').length;document.getElementById('statTriggers').textContent=ts.filter(t=>t.trigger==='YES').length;document.getElementById('commonTrigger').textContent=mode(ts.filter(t=>t.trigger==='YES').map(t=>t.emotion||t.body));document.getElementById('commonEgo').textContent=mode(ts.filter(t=>t.trigger==='YES').map(t=>t.ego))}
+function exportData(){let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='reset-trader-journal.json';a.click()}
+function importData(){let i=document.createElement('input');i.type='file';i.accept='.json';i.onchange=()=>{let r=new FileReader();r.onload=()=>{try{db=JSON.parse(r.result);db.sessions=Array.isArray(db.sessions)?db.sessions:[];db.sessions=db.sessions.map((s,n)=>({...s,id:s.id||`imported_${s.date||'unknown'}_${n}_${Date.now()}`}));persist();delete db.draft;loadDraft();renderHistory();renderStats();alert('Journal imported.')}catch(e){alert('Invalid journal file.')}};r.readAsText(i.files[0])};i.click()}
+loadDraft();renderStats();
+document.querySelectorAll('input,textarea,select').forEach(el=>{el.addEventListener('input',()=>saveDraft('Draft saved'));el.addEventListener('change',()=>saveDraft('Draft saved'));});
+
+let deferredInstallPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;document.getElementById('installBtn').style.display='inline-block'});
+window.addEventListener('appinstalled',()=>{deferredInstallPrompt=null;document.getElementById('installBtn').style.display='none';document.getElementById('appStatus').textContent='App installed · Your journal stays on this device.'});
+async function installApp(){
+  if(!deferredInstallPrompt){
+    alert('On Android Chrome: open the browser menu and choose “Add to Home screen” or “Install app”.');
+    return;
+  }
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt=null;
+  document.getElementById('installBtn').style.display='none';
+}
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+}
+</script>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js';
+import {
+  getAuth, onAuthStateChanged, signInWithPopup,
+  GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+  sendPasswordResetEmail, signOut, setPersistence, browserLocalPersistence
+} from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js';
+import {
+  initializeFirestore, persistentLocalCache, persistentMultipleTabManager,
+  collection, doc, getDocs, setDoc, deleteDoc, query, orderBy
+} from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js';
+import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-functions.js';
+
+const firebaseConfig={
+  apiKey:'AIzaSyBScbIboHnObhrFesQaNy1PQL7OIUCaulg',
+  authDomain:'reset-traders-app.firebaseapp.com',
+  projectId:'reset-traders-app',
+  storageBucket:'reset-traders-app.firebasestorage.app',
+  messagingSenderId:'578199029729',
+  appId:'1:578199029729:web:a7bd1272a0f847cd06f4a0',
+  measurementId:'G-W45H2671EJ'
+};
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const functions=getFunctions(app,'asia-south1');
+let firestoreReady=true;
+let dbCloud;
+try{
+  dbCloud=initializeFirestore(app,{localCache:persistentLocalCache({tabManager:persistentMultipleTabManager()})});
+}catch(e){
+  firestoreReady=false;
+  console.warn('Firestore initialization failed',e);
+}
+await setPersistence(auth,browserLocalPersistence).catch(()=>{});
+
+const gate=document.getElementById('authGate');
+const emailForm=document.getElementById('emailForm');
+const emailBtn=document.getElementById('emailBtn');
+const googleBtn=document.getElementById('googleBtn');
+const forgotBtn=document.getElementById('forgotBtn');
+const errorBox=document.getElementById('authError');
+const signInTab=document.getElementById('signInTab');
+const signUpTab=document.getElementById('signUpTab');
+const syncDot=document.getElementById('syncDot');
+const userLabel=document.getElementById('userLabel');
+const userAvatar=document.getElementById('userAvatar');
+let mode='signin';
+
+function showError(msg){errorBox.textContent=msg;errorBox.style.display='block'}
+function clearError(){errorBox.textContent='';errorBox.style.display='none'}
+function setMode(next){mode=next;clearError();signInTab.classList.toggle('active',mode==='signin');signUpTab.classList.toggle('active',mode==='signup');emailBtn.textContent=mode==='signin'?'Sign in with email':'Create account';forgotBtn.style.display=mode==='signin'?'block':'none'}
+signInTab.onclick=()=>setMode('signin');signUpTab.onclick=()=>setMode('signup');
+
+googleBtn.onclick=async()=>{
+  clearError(); googleBtn.disabled=true; googleBtn.textContent='Opening Google…';
+  try{await signInWithPopup(auth,new GoogleAuthProvider())}
+  catch(e){showError(friendlyError(e));googleBtn.disabled=false;googleBtn.textContent='Continue with Google'}
+};
+emailForm.onsubmit=async(e)=>{
+  e.preventDefault();clearError();emailBtn.disabled=true;
+  const email=document.getElementById('authEmail').value.trim();const password=document.getElementById('authPassword').value;
+  try{
+    if(mode==='signin') await signInWithEmailAndPassword(auth,email,password);
+    else await createUserWithEmailAndPassword(auth,email,password);
+  }catch(err){showError(friendlyError(err))}finally{emailBtn.disabled=false}
+};
+forgotBtn.onclick=async()=>{clearError();const email=document.getElementById('authEmail').value.trim();if(!email){showError('Enter your email address first.');return}try{await sendPasswordResetEmail(auth,email);showError('Password reset email sent. Check your inbox.');errorBox.style.background='#f0f7f2';errorBox.style.color='var(--green)'}catch(e){showError(friendlyError(e))}};
+document.getElementById('signOutBtn').onclick=()=>signOut(auth);
+
+function friendlyError(e){
+ const c=e?.code||'';
+ const map={'auth/invalid-email':'Enter a valid email address.','auth/missing-password':'Enter your password.','auth/invalid-credential':'Email or password is incorrect.','auth/email-already-in-use':'An account already exists with this email. Try signing in.','auth/weak-password':'Use a stronger password with at least 6 characters.','auth/popup-blocked':'Google sign-in was blocked. Allow pop-ups for RESET TRADER and try again.','auth/network-request-failed':'Network connection failed. Try again when online.','auth/too-many-requests':'Too many attempts. Wait a little and try again.','auth/operation-not-allowed':'This sign-in method is not enabled in Firebase.'};
+ return map[c]||e?.message||'Sign-in failed. Please try again.';
+}
+
+async function getCloudSessions(uid){
+ if(!firestoreReady) throw new Error('Firestore is not initialized.');
+ const ref=collection(dbCloud,'users',uid,'sessions');
+ const snap=await getDocs(ref);return snap.docs.map(d=>d.data());
+}
+async function saveCloudSession(uid,s){
+ if(!firestoreReady) return false;
+ await setDoc(doc(dbCloud,'users',uid,'sessions',s.id),{...s,updatedAt:new Date().toISOString()});
+ return true;
+}
+async function deleteCloudSession(uid,id){if(firestoreReady) await deleteDoc(doc(dbCloud,'users',uid,'sessions',id))}
+
+function mergeSessions(local,cloud){
+ const map=new Map();
+ [...cloud,...local].forEach(s=>{if(!s?.id)return;const old=map.get(s.id);if(!old||new Date(s.savedAt||s.updatedAt||0)>=new Date(old.savedAt||old.updatedAt||0))map.set(s.id,s)});
+ return [...map.values()].sort((a,b)=>new Date(b.savedAt||b.updatedAt||0)-new Date(a.savedAt||a.updatedAt||0));
+}
+
+async function syncAfterLogin(user){
+ syncDot.textContent='SYNCING';syncDot.classList.remove('offline');
+ try{
+   const cloud=await getCloudSessions(user.uid);
+   const local=Array.isArray(db.sessions)?db.sessions:[];
+   const merged=mergeSessions(local,cloud);
+   const cloudIds=new Set(cloud.map(s=>s.id));
+   for(const s of merged){ if(!cloudIds.has(s.id)) await saveCloudSession(user.uid,s); }
+   db.sessions=merged; localStorage.setItem(KEY,JSON.stringify(db));
+   renderHistory();renderStats();
+   syncDot.textContent='SYNCED';
+   setStatus(`Synced · ${merged.length} session${merged.length===1?'':'s'} · ${user.email||'Account'}`);
+ }catch(e){
+   console.warn('Cloud sync unavailable',e);
+   syncDot.textContent='OFFLINE';syncDot.classList.add('offline');
+   setStatus('Account active · local journal is working. Cloud sync needs Firestore setup.');
+ }
+}
+
+// Hook the existing submit flow without changing its UI logic.
+const originalSubmit=window.submitSession;
+window.submitSession=async function(){
+  originalSubmit();
+  const after=(db.sessions||[]);
+  const submitted=after.slice().sort((a,b)=>new Date(b.savedAt||0)-new Date(a.savedAt||0))[0];
+  const user=auth.currentUser;
+  if(user && submitted){try{await saveCloudSession(user.uid,submitted);syncDot.textContent='SYNCED';syncDot.classList.remove('offline');setStatus('Session submitted and synced to your account.')}catch(e){syncDot.textContent='OFFLINE';syncDot.classList.add('offline');setStatus('Session saved locally. It will sync when cloud access is available.')}}
+};
+
+// Entitlement is initialized immediately so the app never exposes an undefined state.
+window.resetTraderEntitlement={role:'user',plan:'free',isPro:false};
+
+async function refreshEntitlement(user){
+ if(!user){
+   window.resetTraderEntitlement={role:'user',plan:'free',isPro:false};
+   return window.resetTraderEntitlement;
+ }
+ try{
+   let token=await user.getIdTokenResult(true);
+   if(token.claims.admin !== true && (user.email||'').toLowerCase()==='omkarpardeshi2001@gmail.com'){
+     try{
+       await httpsCallable(functions,'bootstrapAdmin')();
+       // Custom claims are only visible after the ID token is refreshed.
+       token=await user.getIdTokenResult(true);
+     }catch(e){
+       console.warn('Admin bootstrap:',e);
+     }
+   }
+   const isAdmin=token.claims.admin===true;
+   window.resetTraderEntitlement={role:isAdmin?'admin':'user',plan:isAdmin?'pro':'free',isPro:isAdmin};
+ }catch(e){
+   console.warn('Entitlement check failed:',e);
+   window.resetTraderEntitlement={role:'user',plan:'free',isPro:false};
+ }
+ return window.resetTraderEntitlement;
+}
+
+// Expose a small debug-safe state for the app without exposing credentials.
+window.resetTraderAuth={get user(){return auth.currentUser},saveCloudSession,deleteCloudSession};
+window.resetTraderRefreshEntitlement=()=>refreshEntitlement(auth.currentUser);
+
+onAuthStateChanged(auth,async(user)=>{
+ await refreshEntitlement(user);
+ if(user){
+   gate.style.display='none';
+   userLabel.textContent=user.displayName||user.email||'ACCOUNT';
+   if(user.photoURL)userAvatar.src=user.photoURL;
+   await syncAfterLogin(user);
+ }else{
+   gate.style.display='flex';
+   userLabel.textContent='ACCOUNT';
+   syncDot.textContent='SIGN IN';syncDot.classList.remove('offline');
+ }
+});
+
+// Auth can already be restored before the listener callback is scheduled.
+// Explicitly refresh once after wiring the listener so entitlement is ready on first load.
+if(auth.currentUser){
+  await refreshEntitlement(auth.currentUser);
+}
+</script>
+</body>
+</html>
