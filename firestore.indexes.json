@@ -1,0 +1,13 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "alerts",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        {"fieldPath":"status","order":"ASCENDING"},
+        {"fieldPath":"nextAt","order":"ASCENDING"}
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
